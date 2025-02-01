@@ -1,0 +1,54 @@
+1. Data generation: 
+python3 test.py
+
+2. Data frame creation:
+df= spark.read.csv(path, sep=",", inferSchema= True, header= True)
+df.show()
+
+3. Time stamp formatting
+ df1= df.withColumn("timestamp", to_timestamp("timestamp", "MM/DD/YYYY HH:mm:ss")).show()
+
+4. df1= df.withColumn("Sys_date", to_date("timestamp"))
+   df1.show()
+
+5. df2.write.parquet("hdfs://DESKTOP-9KOK4D4:9000/data/web_visits.parquet")
+  
+6. data= spark.read.parquet("hdfs://DESKTOP-9KOK4D4:9000/data/web_visits.parquet")
+
+7. 
+
+a) data.groupBy("title").count().show()
+
+b) count_df= data1.groupBy("hour").count().alias("Count")
+   max_df= count_df.sort("count", ascending= False)
+   max_df.show()
+
+c) name_cnt= data.groupBy("name").count().alias("cnt")
+   max_name= name_cnt.sort("count", ascending= False)
+   max_name.show()
+
+d) new_df= data.where(data.title== "Remote Support: Geek Squad - Best Buy")
+   name_cnt1= new_df.groupBy("name").count()
+   max_name1= name_cnt1.sort("count", ascending= False)
+   max_name1.show()
+
+e) data_title1= data.select("name").where((data.title=="Best Buy Support & Customer Service") & (data.title=="Remote Sup
+port: Geek Squad - Best Buy"))
+   cnt= data_title1.distinct().count()
+   print(cnt)
+
+f) data_title2= data.select("name").where((data.title=="Best Buy Support & Customer Service") & (data.title=="Schedule a Service - Best Buy"))
+   cnt2= data_title2.distinct().count()
+   print(cnt2)
+
+g)  df= data.groupBy("name").agg(min("timestamp").alias("start_time"),max("timestamp").alias("end_time")).withColumn("in
+terval",col("end_time").cast("long") - col("start_time").cast("long"))
+    max_user= df.sort("interval", ascending= False)
+    max_user.show()
+
+h)  df= data.groupBy("name").agg(min("timestamp").alias("start_time"),max("timestamp").alias("end_time")).withColumn("in
+terval",col("end_time").cast("long") - col("start_time").cast("long"))
+     min_user= df.sort("interval", ascending= True)
+      min_user.show()
+    
+   
